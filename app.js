@@ -8,7 +8,7 @@ const { data } = require('cheerio/lib/api/attributes');
 
 app.use(bodyParser.urlencoded({ extended: false }));
 
-app.use(bodyParser.json())
+app.use(bodyParser.json());
 
 app.get('/',(req,res)=>{
     res.send("Hello");
