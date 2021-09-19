@@ -14,29 +14,12 @@ app.get('/',(req,res)=>{
     res.send("Hello");
 })
 
-app.get('/api/:query/:page?',async(req,res)=>{
-   try{
-
-
+app.get('/:query/:page?',async(req,res)=>{
     let query=req.params.query;
     let page=req.params.page;
-    let data = await getData(query,page);
-
-    let links=[];
-
-    data.forEach((el,i)=>{
-        links.push(el);
+    await getData(query,page,(err,data)=>{
+        res.send(data);
     });
-
-    const torLinksA = await Promise.all(links.map(async({link,size,seed},i)=>{
-      torLinks = await getMagLink(link,size,seed);
-      return torLinks;
-    }))
-    res.send(torLinksA)
-
-   }catch(err){
-       console.log(err)
-   }
 
 })
 

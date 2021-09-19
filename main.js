@@ -1,18 +1,20 @@
-const axios = require('axios');
-const cheerio = require('cheerio');
+var cheerio = require('cheerio');
+const got = require('got');
 const { slice } = require('cheerio/lib/api/traversing');
 const getMagLink = require('./getTor.js')
 
-async function getData(query = '', page = '1') {
+async function getData(query="avenger", page = '1',callback) {
   let allTorrent = [];
   const url = `https://1337x.to/search/${query}/${page}/`;
   let htmlData;
   try {
-    htmlData = await axios.get(url)
+    const res = await got(url);
+    htmlData = res.body;
+
   } catch (er) {
-    console.log(er);
+    return null;
   }
-  const $ = cheerio.load(htmlData.data);
+  const $ = cheerio.load(htmlData);
   const tbody = $('tbody tr');
 
   for (let i = 0; i < tbody.length; i++) {
@@ -33,12 +35,22 @@ async function getData(query = '', page = '1') {
 
   }
 
-  // const torrents = {
-  //   allTorrent,
-  // }
+let links=[];
 
-return allTorrent;
+    allTorrent.forEach((el,i)=>{
+        links.push(el);
+    });
+
+    const torLinksA = await Promise.all(links.map(async({link,size,seed},i)=>{
+      torLinks = await getMagLink(link,size,seed);
+      return torLinks;
+    }))
+
+    callback(undefined,torLinksA);
+
 
 }
+
+// getData()
 
 module.exports = getData;
