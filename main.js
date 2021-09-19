@@ -3,7 +3,7 @@ const got = require('got');
 const { slice } = require('cheerio/lib/api/traversing');
 const getMagLink = require('./getTor.js')
 
-async function getData(query="avenger", page = '1',callback) {
+async function getData(query, page = '1',callback) {
   let allTorrent = [];
   const url = `https://1337x.to/search/${query}/${page}/`;
   let htmlData;
